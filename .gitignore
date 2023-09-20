@@ -1,0 +1,4 @@
+# DBは含めない
+*.db
+*.sqlite
+*.sqlite3

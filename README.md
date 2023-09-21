@@ -1,13 +1,13 @@
 # iTunes2DB
 
-# Description
+## Description
 SQLite the metadata of music files (m4a or mp3) managed in iTunes.
 
-# Requiers
+## Requiers
 - Windows
 - Python 3
 
-# License
+## License
 MIT
 
 ## Author

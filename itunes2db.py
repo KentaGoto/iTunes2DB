@@ -5,7 +5,7 @@ from mutagen.id3 import ID3
 from mutagen.mp4 import MP4
 
 
-# 音楽ファイルのハフルパスを取得
+# Get the full path of the music file.
 def get_music_files(folder_path):
     music_files = []
     for root, dirs, files in os.walk(folder_path):
@@ -15,19 +15,19 @@ def get_music_files(folder_path):
                 music_files.append(full_path)
     return music_files
 
-# Windowsのユーザー名を取得
+# Get Windows user name.
 windows_username = os.getlogin()
 
-# 対象フォルダルートパス
+# Target folder root path.
 music_folder_path_root = 'C:\\Users\\' + windows_username + '\\Music\\iTunes\\iTunes Media\\Music'
 
-# 音楽データを格納するリスト
+# List to store music data.
 music_files_list = get_music_files(music_folder_path_root)
 
-# メタデータを格納するリスト
+# Lists for storing metadata.
 metadata_list = []
 
-# 音楽データ（mp3, m4a）のメタデータ値を取得
+# Get metadata values of music data (mp3, m4a).
 for file_path in music_files_list:
     title, artist, album, track_number = 'Unknown title', 'Unknown artist', 'Unknown album', 'Unknown track'  # Default values
 
@@ -52,11 +52,11 @@ for file_path in music_files_list:
         
     metadata_list.append((title, artist, album, track_number))
 
-# SQLiteデータベースの作成と接続
+# Creating and connecting to a SQLite database.
 conn = sqlite3.connect('iTunesMusic.db')
 c = conn.cursor()
 
-# テーブル作成
+# Create a table.
 c.execute('''
 CREATE TABLE IF NOT EXISTS music (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,11 +67,11 @@ CREATE TABLE IF NOT EXISTS music (
 );
 ''')
 
-# メタデータの挿入（重複チェック付き）
+# Insert metadata.
 for metadata in metadata_list:
     title, artist, album, track_number = metadata
 
-    # 重複チェック
+    # Check for duplicates.
     c.execute("SELECT * FROM music WHERE title = ? AND artist = ? AND album = ? AND track_number = ?",
               (title, artist, album, track_number))
     
@@ -79,7 +79,6 @@ for metadata in metadata_list:
         c.execute("INSERT INTO music (title, artist, album, track_number) VALUES (?, ?, ?, ?)", 
                   (title, artist, album, track_number))
 
-# コミットとクローズ
 conn.commit()
 conn.close()
 
